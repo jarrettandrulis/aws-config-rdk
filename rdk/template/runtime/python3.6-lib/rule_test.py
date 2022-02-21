@@ -10,26 +10,28 @@ import rdklibtest
 ##############
 
 # Define the default resource to report to Config Rules
-RESOURCE_TYPE = 'AWS::::Account'
+RESOURCE_TYPE = "AWS::::Account"
 
 #############
 # Main Code #
 #############
 
-MODULE = __import__('<%RuleName%>')
+MODULE = __import__("<%RuleName%>")
 RULE = MODULE.<%RuleName%>()
 
 CLIENT_FACTORY = MagicMock()
 
-#example for mocking S3 API calls
+# example for mocking S3 API calls
 S3_CLIENT_MOCK = MagicMock()
 
+
 def mock_get_client(client_name, *args, **kwargs):
-    if client_name == 's3':
+    if client_name == "s3":
         return S3_CLIENT_MOCK
     raise Exception("Attempting to create an unknown client")
 
-@patch.object(CLIENT_FACTORY, 'build_client', MagicMock(side_effect=mock_get_client))
+
+@patch.object(CLIENT_FACTORY, "build_client", MagicMock(side_effect=mock_get_client))
 class ComplianceTest(unittest.TestCase):
 
     rule_parameters = '{"SomeParameterKey":"SomeParameterValue","SomeParameterKey2":"SomeParameterValue2"}'
@@ -42,7 +44,7 @@ class ComplianceTest(unittest.TestCase):
     def test_sample(self):
         self.assertTrue(True)
 
-    #def test_sample_2(self):
+    # def test_sample_2(self):
     #    response = MODULE.lambda_handler(rdklib.build_lambda_configurationchange_event(self.invoking_event_iam_role_sample, self.rule_parameters), {})
     #    resp_expected = []
     #    resp_expected.append(rdklib.build_expected_response('NOT_APPLICABLE', 'some-resource-id', 'AWS::IAM::Role'))
